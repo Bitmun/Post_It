@@ -1,13 +1,44 @@
 "use client"
 
 import { useState } from "react"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import axios, { AxiosError } from "axios"
+import toast from "react-hot-toast"
 
 
 export default function CreatePost() {
   const [title, setTitle] = useState("")
   const [isDisabled, setIsDisabled] = useState(false)
+  const [toastPostId, setToastPostId] = useState("")
+
+  //Create a post
+  const { mutate } = useMutation(
+    async (title: string) => await axios.post('/api/posts/addPost', {title}), 
+    {
+      onError: (error) => {
+        if (error instanceof AxiosError) {
+          console.log(toastPostId)
+          toast.error(error?.response?.data.message, {id: toastPostId})
+        }
+        setIsDisabled(false)
+      },
+      onSuccess: (data) => {
+        toast.success("Post has been made !", {id: toastPostId})
+        setTitle("")
+        setIsDisabled(false)
+      }
+    }
+  )
+  const submitPost = async (e: React.FormEvent) => {
+    let temp = toast.loading("Creating your post...", {id: toastPostId})
+    setToastPostId(temp)
+    e.preventDefault()
+    setIsDisabled(true)
+    mutate(title)
+  }
+
   return (
-    <form className=" bg-blue-200 my-8 p-8 rounded-md">
+    <form onSubmit={submitPost} className=" bg-blue-200 my-8 p-8 rounded-md">
       <div className="flex flex-col my-4">
         <textarea name="title" onChange={(e) => {
           setTitle(e.target.value)

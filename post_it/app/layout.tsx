@@ -3,6 +3,9 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import Nav from './auth/Nav'
 import { Roboto } from 'next/font/google'
+import QueryWrapper from "./auth/QueryWrapper"
+import { Toaster } from 'react-hot-toast'
+
 const inter = Inter({ subsets: ['latin'] })
 
 const roboto = Roboto({
@@ -24,8 +27,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`mx-4 md:mx-48 xl:mx-96 ${roboto.variable} bg-gray-20`}>
+      <QueryWrapper>
       <Nav/>
       {children}
+      </QueryWrapper>
       </body>
     </html>
   )
