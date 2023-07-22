@@ -66,8 +66,8 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
-  Posts         Post[]
-  Comments      Comment[]
+  posts         Post[]
+  comments      Comment[]
 }
 
 model VerificationToken {
