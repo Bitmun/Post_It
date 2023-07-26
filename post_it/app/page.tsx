@@ -19,7 +19,6 @@ export default function Home() {
   if (isLoading) {
     return "Loading..."
   }
-  // console.log()
   return (
     <main >
       <AddPost />
