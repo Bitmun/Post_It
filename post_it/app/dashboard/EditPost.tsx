@@ -1,6 +1,11 @@
 "use client"
 
 import Image from "next/image"
+import Toggle from "./Toggle"
+import { useState } from "react"
+import { useMutation } from "@tanstack/react-query"
+import axios from "axios"
+import { error } from "console"
 
 type EditProps = {
   id: string
@@ -15,7 +20,25 @@ type EditProps = {
 }
 
 export default function EditPost({avatar, name, title, comments, id} : EditProps) {
+  const [toggle, setToggle] = useState(false)
+
+  const mutate = useMutation(
+    async (id:string) => await axios.delete('/api/posts/deletePost', {data: id}),
+    {
+      onError: (error) => {
+        console.log(error)
+      },
+      onSuccess: (data) => {
+        console.log(data)
+      }
+    }
+  )
+  const deletePost = () => {
+    mutate(id)
+  }
+
   return (
+    <>
     <div className=" bg-gray-200 my-8 p-8 rounded-lg">
       <div className="flex gap-4 items-center">
         <Image
@@ -33,8 +56,12 @@ export default function EditPost({avatar, name, title, comments, id} : EditProps
         <p className="text-sm font-bold text-gray-500">
           {comments?.length} Comments
         </p>
-        <button className="text-sm font-bold text-red-500">Delete</button>
+        <button onClick={(e) => {
+          setToggle(true)
+        }} className="text-sm font-bold text-red-500">Delete</button>
       </div>
     </div>
+    {toggle && <Toggle deletePost={deletePost} setToggle={setToggle}/>}
+    </>
   )
 }

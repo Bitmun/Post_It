@@ -10,6 +10,7 @@ export default function CreatePost() {
   const [title, setTitle] = useState("")
   const [isDisabled, setIsDisabled] = useState(false)
   const [toastPostId, setToastPostId] = useState("")
+  const queryClient = useQueryClient()
 
   //Create a post
   const { mutate } = useMutation(
@@ -26,6 +27,7 @@ export default function CreatePost() {
         toast.success("Post has been made !", {id: toastPostId})
         setTitle("")
         setIsDisabled(false)
+        queryClient.invalidateQueries(["posts"])
       }
     }
   )
